@@ -1,0 +1,6 @@
+function ypred = rsrp3(D, AZ, ELEV, TILT, CLASS, FQ, OBS)
+    T=table(D,AZ,ELEV,TILT,CLASS,FQ,OBS);
+    %#function fitrensemble
+    load('RF7.mat');
+    ypred = RF7.predictFcn(T);
+end

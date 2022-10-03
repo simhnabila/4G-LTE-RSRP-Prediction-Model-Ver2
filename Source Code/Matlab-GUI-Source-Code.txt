@@ -1,0 +1,675 @@
+classdef app1 < matlab.apps.AppBase
+
+    % Properties that correspond to app components
+    properties (Access = public)
+        UIFigure                        matlab.ui.Figure
+        PredictionModelPanel            matlab.ui.container.Panel
+        DistanceMEditFieldLabel         matlab.ui.control.Label
+        DistanceMEditField              matlab.ui.control.NumericEditField
+        AzimuthOffsetDegEditFieldLabel  matlab.ui.control.Label
+        AzimuthOffsetDegEditField       matlab.ui.control.NumericEditField
+        ElevationDegEditFieldLabel      matlab.ui.control.Label
+        ElevationDegEditField           matlab.ui.control.NumericEditField
+        TiltOffsetDegEditFieldLabel     matlab.ui.control.Label
+        TiltOffsetDegEditField          matlab.ui.control.NumericEditField
+        EnvironmentDropDownLabel        matlab.ui.control.Label
+        EnvironmentDropDown             matlab.ui.control.DropDown
+        FrequencyMHzDropDownLabel       matlab.ui.control.Label
+        FrequencyMHzDropDown            matlab.ui.control.DropDown
+        SignalStatusDropDownLabel       matlab.ui.control.Label
+        SignalStatusDropDown            matlab.ui.control.DropDown
+        RSRPdBmEditFieldLabel           matlab.ui.control.Label
+        RSRPdBmEditField                matlab.ui.control.NumericEditField
+        CALCULATEButton                 matlab.ui.control.Button
+        ResetRSRPButton                 matlab.ui.control.Button
+        ResetAllButton_2                matlab.ui.control.Button
+        AlertsLabel                     matlab.ui.control.Label
+        Themodelisestimatedtogenerateanoutputwithin20secondsLabel  matlab.ui.control.Label
+        AntennaTxPanel                  matlab.ui.container.Panel
+        LatitudeDDEditFieldLabel        matlab.ui.control.Label
+        LatitudeDDEditField             matlab.ui.control.NumericEditField
+        LongitudeDDEditFieldLabel       matlab.ui.control.Label
+        LongitudeDDEditField            matlab.ui.control.NumericEditField
+        HeightASLMEditFieldLabel        matlab.ui.control.Label
+        HeightASLMEditField             matlab.ui.control.NumericEditField
+        AzimuthDegEditFieldLabel        matlab.ui.control.Label
+        AzimuthDegEditField             matlab.ui.control.NumericEditField
+        TiltDegEditFieldLabel           matlab.ui.control.Label
+        TiltDegEditField                matlab.ui.control.NumericEditField
+        MobileEquipmentRxPanel          matlab.ui.container.Panel
+        LatitudeDDEditField_2Label      matlab.ui.control.Label
+        LatitudeDDEditField_2           matlab.ui.control.NumericEditField
+        LongitudeDDEditField_2Label     matlab.ui.control.Label
+        LongitudeDDEditField_2          matlab.ui.control.NumericEditField
+        HeightASLMEditField_2Label      matlab.ui.control.Label
+        HeightASLMEditField_2           matlab.ui.control.NumericEditField
+        AlertsLabel_2                   matlab.ui.control.Label
+        Label_2                         matlab.ui.control.Label
+        FeaturesValuePanel              matlab.ui.container.Panel
+        DistanceMEditField_2Label       matlab.ui.control.Label
+        DistanceMEditField_2            matlab.ui.control.NumericEditField
+        AzimuthOffsetDegEditField_2Label  matlab.ui.control.Label
+        AzimuthOffsetDegEditField_2     matlab.ui.control.NumericEditField
+        ElevationDegEditField_2Label    matlab.ui.control.Label
+        ElevationDegEditField_2         matlab.ui.control.NumericEditField
+        TiltOffsetDegreeEditFieldLabel  matlab.ui.control.Label
+        TiltOffsetDegreeEditField       matlab.ui.control.NumericEditField
+        ValueTransferButton             matlab.ui.control.Button
+        CalculateButton                 matlab.ui.control.Button
+        ResetAllButton                  matlab.ui.control.Button
+        ResetFeaturesButton             matlab.ui.control.Button
+        TabGroup                        matlab.ui.container.TabGroup
+        FeaturesDescriptionTab          matlab.ui.container.Tab
+        Image3                          matlab.ui.control.Image
+        RSRPTab                         matlab.ui.container.Tab
+        Image2                          matlab.ui.control.Image
+        Label                           matlab.ui.control.Label
+        NoteLabel                       matlab.ui.control.Label
+        AboutUsTab                      matlab.ui.container.Tab
+        Label_3                         matlab.ui.control.Label
+        DisclaimerLabel                 matlab.ui.control.Label
+        ClickHereForTutorialVideoButton  matlab.ui.control.Button
+        GRSRPPredictionModelLabel       matlab.ui.control.Label
+        AMachineLearningBasedModelLabel  matlab.ui.control.Label
+        Copyright2022UniversitiKebangsaanMalaysiaAllRightsReservedLabel  matlab.ui.control.Label
+    end
+
+    % Callbacks that handle component events
+    methods (Access = private)
+
+        % Button pushed function: CALCULATEButton
+        function CALCULATEButtonPushed(app, event)
+            D=app.DistanceMEditField.Value;
+            AZ=app.AzimuthOffsetDegEditField.Value;
+            ELEV=app.ElevationDegEditField.Value;
+            TILT=app.TiltOffsetDegEditField.Value;
+            switch app.EnvironmentDropDown.Value
+                case 'Urban'
+                    CLASS=1;
+                case 'Suburban'
+                    CLASS=2;
+                case 'Open Area'
+                    CLASS=3;
+            end
+            switch app.FrequencyMHzDropDown.Value
+                case '1800'
+                    FQ=1800;
+                case '2600'
+                    FQ=2600;
+            end
+            switch app.SignalStatusDropDown.Value
+                case 'LOS'
+                    OBS=0;
+                case 'NLOS'
+                    OBS=1;
+            end
+            app.RSRPdBmEditField.Value=rsrp3(D, AZ, ELEV, TILT, CLASS, FQ, OBS);
+        end
+
+        % Button pushed function: CalculateButton
+        function CalculateButtonPushed(app, event)
+            AA=app.LatitudeDDEditField.Value;
+            BB=app.LongitudeDDEditField.Value;
+            CC=app.HeightASLMEditField.Value;
+            DD=app.AzimuthDegEditField.Value;
+            EE=app.TiltDegEditField.Value;
+            FF=app.LatitudeDDEditField_2.Value;
+            GG=app.LongitudeDDEditField_2.Value;
+            HH=app.HeightASLMEditField_2.Value;
+            D2=acos(cos(deg2rad(90-AA))*cos(deg2rad(90-FF))+sin(deg2rad(90-AA))*sin(deg2rad(90-FF))*cos(deg2rad(BB-GG)))*6371000;
+            RxAZrad=atan2(sin(deg2rad(GG-BB))*cos(deg2rad(FF)),cos(deg2rad(AA))*sin(deg2rad(FF))-sin(deg2rad(AA))*cos(deg2rad(FF))*cos(deg2rad(GG-BB)));
+            if RxAZrad<0
+                RxAZdeg=360-abs(RxAZrad*180/pi);
+            else
+                RxAZdeg=RxAZrad*180/pi;
+            end
+            AZOffset=abs(DD-RxAZdeg);
+            Hgt=CC-HH;
+            RxELEV=atan(Hgt/D2)*180/pi;
+            TILToffset=abs(RxELEV-EE);
+            app.DistanceMEditField_2.Value=D2;
+            app.AzimuthOffsetDegEditField_2.Value=AZOffset;
+            app.ElevationDegEditField_2.Value=RxELEV;
+            app.TiltOffsetDegreeEditField.Value=TILToffset;
+        end
+
+        % Button pushed function: ValueTransferButton
+        function ValueTransferButtonPushed(app, event)
+            app.DistanceMEditField.Value=app.DistanceMEditField_2.Value;
+            app.AzimuthOffsetDegEditField.Value=app.AzimuthOffsetDegEditField_2.Value;
+            app.ElevationDegEditField.Value=app.ElevationDegEditField_2.Value;
+            app.TiltOffsetDegEditField.Value=app.TiltOffsetDegreeEditField.Value;
+        end
+
+        % Button pushed function: ResetAllButton
+        function ResetAllButtonPushed(app, event)
+            app.LatitudeDDEditField.Value=0;
+            app.LongitudeDDEditField.Value=0;
+            app.HeightASLMEditField.Value=0;
+            app.AzimuthDegEditField.Value=0;
+            app.TiltDegEditField.Value=0;
+            app.LatitudeDDEditField_2.Value=0;
+            app.LongitudeDDEditField_2.Value=0;
+            app.HeightASLMEditField_2.Value=0;
+            app.DistanceMEditField_2.Value=0;
+            app.AzimuthOffsetDegEditField_2.Value=0;
+            app.ElevationDegEditField_2.Value=0;
+            app.TiltOffsetDegreeEditField.Value=0;
+        end
+
+        % Button pushed function: ResetFeaturesButton
+        function ResetFeaturesButtonPushed(app, event)
+            app.DistanceMEditField_2.Value=0;
+            app.AzimuthOffsetDegEditField_2.Value=0;
+            app.ElevationDegEditField_2.Value=0;
+            app.TiltOffsetDegreeEditField.Value=0;
+        end
+
+        % Button pushed function: ResetRSRPButton
+        function ResetRSRPButtonPushed(app, event)
+            app.RSRPdBmEditField.Value=0;
+        end
+
+        % Button pushed function: ResetAllButton_2
+        function ResetAllButton_2Pushed(app, event)
+            app.DistanceMEditField.Value=1;
+            app.AzimuthOffsetDegEditField.Value=0;
+            app.ElevationDegEditField.Value=0;
+            app.TiltOffsetDegEditField.Value=0;
+            app.EnvironmentDropDown.Value='Urban';
+            app.FrequencyMHzDropDown.Value='1800';
+            app.SignalStatusDropDown.Value='LOS';
+            app.RSRPdBmEditField.Value=0;
+        end
+
+        % Button pushed function: ClickHereForTutorialVideoButton
+        function ClickHereForTutorialVideoButtonPushed(app, event)
+            web('https://www.youtube.com/watch?v=G9GQFx6ePKE', '-browser')
+        end
+    end
+
+    % Component initialization
+    methods (Access = private)
+
+        % Create UIFigure and components
+        function createComponents(app)
+
+            % Create UIFigure and hide until all components are created
+            app.UIFigure = uifigure('Visible', 'off');
+            app.UIFigure.Color = [0.051 0.4706 0.6588];
+            app.UIFigure.Position = [100 100 880 555];
+            app.UIFigure.Name = 'MATLAB App';
+
+            % Create PredictionModelPanel
+            app.PredictionModelPanel = uipanel(app.UIFigure);
+            app.PredictionModelPanel.TitlePosition = 'centertop';
+            app.PredictionModelPanel.Title = 'Prediction Model';
+            app.PredictionModelPanel.BackgroundColor = [0.8 0.8 0.8];
+            app.PredictionModelPanel.FontWeight = 'bold';
+            app.PredictionModelPanel.FontSize = 20;
+            app.PredictionModelPanel.Position = [11 36 420 280];
+
+            % Create DistanceMEditFieldLabel
+            app.DistanceMEditFieldLabel = uilabel(app.PredictionModelPanel);
+            app.DistanceMEditFieldLabel.HorizontalAlignment = 'right';
+            app.DistanceMEditFieldLabel.Position = [4 222 74 22];
+            app.DistanceMEditFieldLabel.Text = 'Distance (M)';
+
+            % Create DistanceMEditField
+            app.DistanceMEditField = uieditfield(app.PredictionModelPanel, 'numeric');
+            app.DistanceMEditField.Limits = [1 1157.95];
+            app.DistanceMEditField.ValueDisplayFormat = '%.2f';
+            app.DistanceMEditField.Position = [136 222 94 22];
+            app.DistanceMEditField.Value = 1;
+
+            % Create AzimuthOffsetDegEditFieldLabel
+            app.AzimuthOffsetDegEditFieldLabel = uilabel(app.PredictionModelPanel);
+            app.AzimuthOffsetDegEditFieldLabel.HorizontalAlignment = 'right';
+            app.AzimuthOffsetDegEditFieldLabel.Position = [4 187 117 22];
+            app.AzimuthOffsetDegEditFieldLabel.Text = 'Azimuth Offset (Deg)';
+
+            % Create AzimuthOffsetDegEditField
+            app.AzimuthOffsetDegEditField = uieditfield(app.PredictionModelPanel, 'numeric');
+            app.AzimuthOffsetDegEditField.Limits = [0 103.39];
+            app.AzimuthOffsetDegEditField.ValueDisplayFormat = '%.2f';
+            app.AzimuthOffsetDegEditField.Position = [136 187 94 22];
+
+            % Create ElevationDegEditFieldLabel
+            app.ElevationDegEditFieldLabel = uilabel(app.PredictionModelPanel);
+            app.ElevationDegEditFieldLabel.HorizontalAlignment = 'right';
+            app.ElevationDegEditFieldLabel.Position = [4 152 88 22];
+            app.ElevationDegEditFieldLabel.Text = 'Elevation (Deg)';
+
+            % Create ElevationDegEditField
+            app.ElevationDegEditField = uieditfield(app.PredictionModelPanel, 'numeric');
+            app.ElevationDegEditField.Limits = [0 28.28];
+            app.ElevationDegEditField.ValueDisplayFormat = '%.2f';
+            app.ElevationDegEditField.Position = [136 152 94 22];
+
+            % Create TiltOffsetDegEditFieldLabel
+            app.TiltOffsetDegEditFieldLabel = uilabel(app.PredictionModelPanel);
+            app.TiltOffsetDegEditFieldLabel.HorizontalAlignment = 'right';
+            app.TiltOffsetDegEditFieldLabel.Position = [4 117 90 22];
+            app.TiltOffsetDegEditFieldLabel.Text = 'Tilt Offset (Deg)';
+
+            % Create TiltOffsetDegEditField
+            app.TiltOffsetDegEditField = uieditfield(app.PredictionModelPanel, 'numeric');
+            app.TiltOffsetDegEditField.Limits = [0 24.54];
+            app.TiltOffsetDegEditField.ValueDisplayFormat = '%.2f';
+            app.TiltOffsetDegEditField.Position = [136 117 94 22];
+
+            % Create EnvironmentDropDownLabel
+            app.EnvironmentDropDownLabel = uilabel(app.PredictionModelPanel);
+            app.EnvironmentDropDownLabel.HorizontalAlignment = 'right';
+            app.EnvironmentDropDownLabel.Position = [4 82 73 22];
+            app.EnvironmentDropDownLabel.Text = 'Environment';
+
+            % Create EnvironmentDropDown
+            app.EnvironmentDropDown = uidropdown(app.PredictionModelPanel);
+            app.EnvironmentDropDown.Items = {'Urban', 'Suburban', 'Open Area'};
+            app.EnvironmentDropDown.Position = [136 82 94 22];
+            app.EnvironmentDropDown.Value = 'Urban';
+
+            % Create FrequencyMHzDropDownLabel
+            app.FrequencyMHzDropDownLabel = uilabel(app.PredictionModelPanel);
+            app.FrequencyMHzDropDownLabel.HorizontalAlignment = 'right';
+            app.FrequencyMHzDropDownLabel.Position = [4 48 98 22];
+            app.FrequencyMHzDropDownLabel.Text = 'Frequency (MHz)';
+
+            % Create FrequencyMHzDropDown
+            app.FrequencyMHzDropDown = uidropdown(app.PredictionModelPanel);
+            app.FrequencyMHzDropDown.Items = {'1800', '2600'};
+            app.FrequencyMHzDropDown.Position = [136 48 94 22];
+            app.FrequencyMHzDropDown.Value = '1800';
+
+            % Create SignalStatusDropDownLabel
+            app.SignalStatusDropDownLabel = uilabel(app.PredictionModelPanel);
+            app.SignalStatusDropDownLabel.HorizontalAlignment = 'right';
+            app.SignalStatusDropDownLabel.Position = [4 14 76 22];
+            app.SignalStatusDropDownLabel.Text = 'Signal Status';
+
+            % Create SignalStatusDropDown
+            app.SignalStatusDropDown = uidropdown(app.PredictionModelPanel);
+            app.SignalStatusDropDown.Items = {'LOS', 'NLOS'};
+            app.SignalStatusDropDown.Position = [136 14 94 22];
+            app.SignalStatusDropDown.Value = 'LOS';
+
+            % Create RSRPdBmEditFieldLabel
+            app.RSRPdBmEditFieldLabel = uilabel(app.PredictionModelPanel);
+            app.RSRPdBmEditFieldLabel.HorizontalAlignment = 'center';
+            app.RSRPdBmEditFieldLabel.FontSize = 16;
+            app.RSRPdBmEditFieldLabel.FontWeight = 'bold';
+            app.RSRPdBmEditFieldLabel.Position = [274 178 100 22];
+            app.RSRPdBmEditFieldLabel.Text = 'RSRP (dBm)';
+
+            % Create RSRPdBmEditField
+            app.RSRPdBmEditField = uieditfield(app.PredictionModelPanel, 'numeric');
+            app.RSRPdBmEditField.HorizontalAlignment = 'center';
+            app.RSRPdBmEditField.FontSize = 16;
+            app.RSRPdBmEditField.FontWeight = 'bold';
+            app.RSRPdBmEditField.BackgroundColor = [0 1 1];
+            app.RSRPdBmEditField.Position = [284 148 79 22];
+
+            % Create CALCULATEButton
+            app.CALCULATEButton = uibutton(app.PredictionModelPanel, 'push');
+            app.CALCULATEButton.ButtonPushedFcn = createCallbackFcn(app, @CALCULATEButtonPushed, true);
+            app.CALCULATEButton.BackgroundColor = [0.3922 0.8314 0.0745];
+            app.CALCULATEButton.FontWeight = 'bold';
+            app.CALCULATEButton.Position = [275 212 100 22];
+            app.CALCULATEButton.Text = 'CALCULATE';
+
+            % Create ResetRSRPButton
+            app.ResetRSRPButton = uibutton(app.PredictionModelPanel, 'push');
+            app.ResetRSRPButton.ButtonPushedFcn = createCallbackFcn(app, @ResetRSRPButtonPushed, true);
+            app.ResetRSRPButton.BackgroundColor = [1 0.149 0.149];
+            app.ResetRSRPButton.FontWeight = 'bold';
+            app.ResetRSRPButton.Position = [275 55 100 22];
+            app.ResetRSRPButton.Text = 'Reset RSRP';
+
+            % Create ResetAllButton_2
+            app.ResetAllButton_2 = uibutton(app.PredictionModelPanel, 'push');
+            app.ResetAllButton_2.ButtonPushedFcn = createCallbackFcn(app, @ResetAllButton_2Pushed, true);
+            app.ResetAllButton_2.BackgroundColor = [1 0.149 0.149];
+            app.ResetAllButton_2.FontWeight = 'bold';
+            app.ResetAllButton_2.Position = [275 25 100 22];
+            app.ResetAllButton_2.Text = 'Reset All';
+
+            % Create AlertsLabel
+            app.AlertsLabel = uilabel(app.PredictionModelPanel);
+            app.AlertsLabel.HorizontalAlignment = 'center';
+            app.AlertsLabel.FontSize = 11;
+            app.AlertsLabel.FontWeight = 'bold';
+            app.AlertsLabel.FontColor = [1 0 0];
+            app.AlertsLabel.Position = [306 123 40 22];
+            app.AlertsLabel.Text = 'Alerts:';
+
+            % Create Themodelisestimatedtogenerateanoutputwithin20secondsLabel
+            app.Themodelisestimatedtogenerateanoutputwithin20secondsLabel = uilabel(app.PredictionModelPanel);
+            app.Themodelisestimatedtogenerateanoutputwithin20secondsLabel.HorizontalAlignment = 'center';
+            app.Themodelisestimatedtogenerateanoutputwithin20secondsLabel.FontSize = 10;
+            app.Themodelisestimatedtogenerateanoutputwithin20secondsLabel.Position = [238 106 174 23];
+            app.Themodelisestimatedtogenerateanoutputwithin20secondsLabel.Text = {'The model is estimated to'; 'generate an output within 20 seconds.'};
+
+            % Create AntennaTxPanel
+            app.AntennaTxPanel = uipanel(app.UIFigure);
+            app.AntennaTxPanel.TitlePosition = 'centertop';
+            app.AntennaTxPanel.Title = 'Antenna / Tx';
+            app.AntennaTxPanel.FontWeight = 'bold';
+            app.AntennaTxPanel.Position = [11 326 240 160];
+
+            % Create LatitudeDDEditFieldLabel
+            app.LatitudeDDEditFieldLabel = uilabel(app.AntennaTxPanel);
+            app.LatitudeDDEditFieldLabel.HorizontalAlignment = 'right';
+            app.LatitudeDDEditFieldLabel.Position = [4 112 77 22];
+            app.LatitudeDDEditFieldLabel.Text = 'Latitude (DD)';
+
+            % Create LatitudeDDEditField
+            app.LatitudeDDEditField = uieditfield(app.AntennaTxPanel, 'numeric');
+            app.LatitudeDDEditField.ValueDisplayFormat = '%.4f';
+            app.LatitudeDDEditField.Position = [134 112 96 22];
+
+            % Create LongitudeDDEditFieldLabel
+            app.LongitudeDDEditFieldLabel = uilabel(app.AntennaTxPanel);
+            app.LongitudeDDEditFieldLabel.HorizontalAlignment = 'right';
+            app.LongitudeDDEditFieldLabel.Position = [4 86 87 22];
+            app.LongitudeDDEditFieldLabel.Text = 'Longitude (DD)';
+
+            % Create LongitudeDDEditField
+            app.LongitudeDDEditField = uieditfield(app.AntennaTxPanel, 'numeric');
+            app.LongitudeDDEditField.ValueDisplayFormat = '%.4f';
+            app.LongitudeDDEditField.Position = [134 86 96 22];
+
+            % Create HeightASLMEditFieldLabel
+            app.HeightASLMEditFieldLabel = uilabel(app.AntennaTxPanel);
+            app.HeightASLMEditFieldLabel.HorizontalAlignment = 'right';
+            app.HeightASLMEditFieldLabel.Position = [3 60 88 22];
+            app.HeightASLMEditFieldLabel.Text = 'Height ASL (M)';
+
+            % Create HeightASLMEditField
+            app.HeightASLMEditField = uieditfield(app.AntennaTxPanel, 'numeric');
+            app.HeightASLMEditField.ValueDisplayFormat = '%.2f';
+            app.HeightASLMEditField.Position = [133 60 97 22];
+
+            % Create AzimuthDegEditFieldLabel
+            app.AzimuthDegEditFieldLabel = uilabel(app.AntennaTxPanel);
+            app.AzimuthDegEditFieldLabel.HorizontalAlignment = 'right';
+            app.AzimuthDegEditFieldLabel.Position = [4 34 82 22];
+            app.AzimuthDegEditFieldLabel.Text = 'Azimuth (Deg)';
+
+            % Create AzimuthDegEditField
+            app.AzimuthDegEditField = uieditfield(app.AntennaTxPanel, 'numeric');
+            app.AzimuthDegEditField.ValueDisplayFormat = '%.2f';
+            app.AzimuthDegEditField.Position = [134 34 96 22];
+
+            % Create TiltDegEditFieldLabel
+            app.TiltDegEditFieldLabel = uilabel(app.AntennaTxPanel);
+            app.TiltDegEditFieldLabel.HorizontalAlignment = 'right';
+            app.TiltDegEditFieldLabel.Position = [4 8 54 22];
+            app.TiltDegEditFieldLabel.Text = 'Tilt (Deg)';
+
+            % Create TiltDegEditField
+            app.TiltDegEditField = uieditfield(app.AntennaTxPanel, 'numeric');
+            app.TiltDegEditField.ValueDisplayFormat = '%.2f';
+            app.TiltDegEditField.Position = [134 8 96 22];
+
+            % Create MobileEquipmentRxPanel
+            app.MobileEquipmentRxPanel = uipanel(app.UIFigure);
+            app.MobileEquipmentRxPanel.TitlePosition = 'centertop';
+            app.MobileEquipmentRxPanel.Title = 'Mobile Equipment / Rx';
+            app.MobileEquipmentRxPanel.FontWeight = 'bold';
+            app.MobileEquipmentRxPanel.Position = [251 326 240 160];
+
+            % Create LatitudeDDEditField_2Label
+            app.LatitudeDDEditField_2Label = uilabel(app.MobileEquipmentRxPanel);
+            app.LatitudeDDEditField_2Label.HorizontalAlignment = 'right';
+            app.LatitudeDDEditField_2Label.Position = [4 112 77 22];
+            app.LatitudeDDEditField_2Label.Text = 'Latitude (DD)';
+
+            % Create LatitudeDDEditField_2
+            app.LatitudeDDEditField_2 = uieditfield(app.MobileEquipmentRxPanel, 'numeric');
+            app.LatitudeDDEditField_2.ValueDisplayFormat = '%.4f';
+            app.LatitudeDDEditField_2.Position = [134 112 96 22];
+
+            % Create LongitudeDDEditField_2Label
+            app.LongitudeDDEditField_2Label = uilabel(app.MobileEquipmentRxPanel);
+            app.LongitudeDDEditField_2Label.HorizontalAlignment = 'right';
+            app.LongitudeDDEditField_2Label.Position = [4 86 87 22];
+            app.LongitudeDDEditField_2Label.Text = 'Longitude (DD)';
+
+            % Create LongitudeDDEditField_2
+            app.LongitudeDDEditField_2 = uieditfield(app.MobileEquipmentRxPanel, 'numeric');
+            app.LongitudeDDEditField_2.ValueDisplayFormat = '%.4f';
+            app.LongitudeDDEditField_2.Position = [134 86 96 22];
+
+            % Create HeightASLMEditField_2Label
+            app.HeightASLMEditField_2Label = uilabel(app.MobileEquipmentRxPanel);
+            app.HeightASLMEditField_2Label.HorizontalAlignment = 'right';
+            app.HeightASLMEditField_2Label.Position = [4 61 88 22];
+            app.HeightASLMEditField_2Label.Text = 'Height ASL (M)';
+
+            % Create HeightASLMEditField_2
+            app.HeightASLMEditField_2 = uieditfield(app.MobileEquipmentRxPanel, 'numeric');
+            app.HeightASLMEditField_2.ValueDisplayFormat = '%.2f';
+            app.HeightASLMEditField_2.Position = [134 61 96 22];
+
+            % Create AlertsLabel_2
+            app.AlertsLabel_2 = uilabel(app.MobileEquipmentRxPanel);
+            app.AlertsLabel_2.FontSize = 11;
+            app.AlertsLabel_2.FontWeight = 'bold';
+            app.AlertsLabel_2.FontColor = [1 0 0];
+            app.AlertsLabel_2.Position = [100 36 40 22];
+            app.AlertsLabel_2.Text = 'Alerts:';
+
+            % Create Label_2
+            app.Label_2 = uilabel(app.MobileEquipmentRxPanel);
+            app.Label_2.HorizontalAlignment = 'center';
+            app.Label_2.FontSize = 10;
+            app.Label_2.FontColor = [0.9294 0.0353 0.0353];
+            app.Label_2.Position = [32.5 6 178 34];
+            app.Label_2.Text = {'Value Transfer will be incomplete/failed'; 'if the features value are exceeded'; 'the allowed range.'};
+
+            % Create FeaturesValuePanel
+            app.FeaturesValuePanel = uipanel(app.UIFigure);
+            app.FeaturesValuePanel.TitlePosition = 'centertop';
+            app.FeaturesValuePanel.Title = 'Features Value';
+            app.FeaturesValuePanel.FontWeight = 'bold';
+            app.FeaturesValuePanel.Position = [491 326 380 160];
+
+            % Create DistanceMEditField_2Label
+            app.DistanceMEditField_2Label = uilabel(app.FeaturesValuePanel);
+            app.DistanceMEditField_2Label.HorizontalAlignment = 'right';
+            app.DistanceMEditField_2Label.Position = [5 108 74 22];
+            app.DistanceMEditField_2Label.Text = 'Distance (M)';
+
+            % Create DistanceMEditField_2
+            app.DistanceMEditField_2 = uieditfield(app.FeaturesValuePanel, 'numeric');
+            app.DistanceMEditField_2.ValueDisplayFormat = '%.2f';
+            app.DistanceMEditField_2.Position = [135 108 96 22];
+
+            % Create AzimuthOffsetDegEditField_2Label
+            app.AzimuthOffsetDegEditField_2Label = uilabel(app.FeaturesValuePanel);
+            app.AzimuthOffsetDegEditField_2Label.HorizontalAlignment = 'right';
+            app.AzimuthOffsetDegEditField_2Label.Position = [5 76 117 22];
+            app.AzimuthOffsetDegEditField_2Label.Text = 'Azimuth Offset (Deg)';
+
+            % Create AzimuthOffsetDegEditField_2
+            app.AzimuthOffsetDegEditField_2 = uieditfield(app.FeaturesValuePanel, 'numeric');
+            app.AzimuthOffsetDegEditField_2.ValueDisplayFormat = '%.2f';
+            app.AzimuthOffsetDegEditField_2.Position = [135 76 96 22];
+
+            % Create ElevationDegEditField_2Label
+            app.ElevationDegEditField_2Label = uilabel(app.FeaturesValuePanel);
+            app.ElevationDegEditField_2Label.HorizontalAlignment = 'right';
+            app.ElevationDegEditField_2Label.Position = [5 44 88 22];
+            app.ElevationDegEditField_2Label.Text = 'Elevation (Deg)';
+
+            % Create ElevationDegEditField_2
+            app.ElevationDegEditField_2 = uieditfield(app.FeaturesValuePanel, 'numeric');
+            app.ElevationDegEditField_2.ValueDisplayFormat = '%.2f';
+            app.ElevationDegEditField_2.Position = [135 44 96 22];
+
+            % Create TiltOffsetDegreeEditFieldLabel
+            app.TiltOffsetDegreeEditFieldLabel = uilabel(app.FeaturesValuePanel);
+            app.TiltOffsetDegreeEditFieldLabel.HorizontalAlignment = 'right';
+            app.TiltOffsetDegreeEditFieldLabel.Position = [5 12 107 22];
+            app.TiltOffsetDegreeEditFieldLabel.Text = 'Tilt Offset (Degree)';
+
+            % Create TiltOffsetDegreeEditField
+            app.TiltOffsetDegreeEditField = uieditfield(app.FeaturesValuePanel, 'numeric');
+            app.TiltOffsetDegreeEditField.ValueDisplayFormat = '%.2f';
+            app.TiltOffsetDegreeEditField.Position = [135 12 96 22];
+
+            % Create ValueTransferButton
+            app.ValueTransferButton = uibutton(app.FeaturesValuePanel, 'push');
+            app.ValueTransferButton.ButtonPushedFcn = createCallbackFcn(app, @ValueTransferButtonPushed, true);
+            app.ValueTransferButton.BackgroundColor = [0.302 0.7451 0.9333];
+            app.ValueTransferButton.FontWeight = 'bold';
+            app.ValueTransferButton.Position = [252 76 110 22];
+            app.ValueTransferButton.Text = 'Value Transfer';
+
+            % Create CalculateButton
+            app.CalculateButton = uibutton(app.FeaturesValuePanel, 'push');
+            app.CalculateButton.ButtonPushedFcn = createCallbackFcn(app, @CalculateButtonPushed, true);
+            app.CalculateButton.BackgroundColor = [0.3922 0.8314 0.0745];
+            app.CalculateButton.FontWeight = 'bold';
+            app.CalculateButton.Position = [252 108 110 22];
+            app.CalculateButton.Text = 'Calculate';
+
+            % Create ResetAllButton
+            app.ResetAllButton = uibutton(app.FeaturesValuePanel, 'push');
+            app.ResetAllButton.ButtonPushedFcn = createCallbackFcn(app, @ResetAllButtonPushed, true);
+            app.ResetAllButton.BackgroundColor = [1 0.149 0.149];
+            app.ResetAllButton.FontWeight = 'bold';
+            app.ResetAllButton.Position = [252 12 110 22];
+            app.ResetAllButton.Text = 'Reset All';
+
+            % Create ResetFeaturesButton
+            app.ResetFeaturesButton = uibutton(app.FeaturesValuePanel, 'push');
+            app.ResetFeaturesButton.ButtonPushedFcn = createCallbackFcn(app, @ResetFeaturesButtonPushed, true);
+            app.ResetFeaturesButton.BackgroundColor = [1 0.149 0.149];
+            app.ResetFeaturesButton.FontWeight = 'bold';
+            app.ResetFeaturesButton.Position = [252 44 110 22];
+            app.ResetFeaturesButton.Text = 'Reset Features';
+
+            % Create TabGroup
+            app.TabGroup = uitabgroup(app.UIFigure);
+            app.TabGroup.Position = [441 36 430 280];
+
+            % Create FeaturesDescriptionTab
+            app.FeaturesDescriptionTab = uitab(app.TabGroup);
+            app.FeaturesDescriptionTab.Title = 'Features Description';
+            app.FeaturesDescriptionTab.BackgroundColor = [1 1 1];
+
+            % Create Image3
+            app.Image3 = uiimage(app.FeaturesDescriptionTab);
+            app.Image3.Position = [5 2 420 250];
+            app.Image3.ImageSource = 'Konsep13.jpg';
+
+            % Create RSRPTab
+            app.RSRPTab = uitab(app.TabGroup);
+            app.RSRPTab.Title = 'RSRP';
+            app.RSRPTab.BackgroundColor = [0.9882 0.9882 0.9882];
+
+            % Create Image2
+            app.Image2 = uiimage(app.RSRPTab);
+            app.Image2.Position = [11 75 410 170];
+            app.Image2.ImageSource = 'RSRP.jpg';
+
+            % Create Label
+            app.Label = uilabel(app.RSRPTab);
+            app.Label.HorizontalAlignment = 'center';
+            app.Label.FontSize = 14;
+            app.Label.Position = [65 20 300 48];
+            app.Label.Text = {'Reference Signal Received Power (RSRP) is a'; 'measurement of the received power level in'; '4G cell network.'};
+
+            % Create NoteLabel
+            app.NoteLabel = uilabel(app.RSRPTab);
+            app.NoteLabel.HorizontalAlignment = 'center';
+            app.NoteLabel.FontSize = 14;
+            app.NoteLabel.FontWeight = 'bold';
+            app.NoteLabel.Position = [197 69 41 22];
+            app.NoteLabel.Text = 'Note:';
+
+            % Create AboutUsTab
+            app.AboutUsTab = uitab(app.TabGroup);
+            app.AboutUsTab.Title = 'About Us';
+
+            % Create Label_3
+            app.Label_3 = uilabel(app.AboutUsTab);
+            app.Label_3.HorizontalAlignment = 'center';
+            app.Label_3.FontSize = 13;
+            app.Label_3.Position = [31 45 372 199];
+            app.Label_3.Text = {'4G RSRP Prediction Model (Version 2.0) developed based'; 'on Random Forest algorithm. The model develop under FKAB,'; 'UKM research program strictly for educational purposes.'; ''; ''; 'We are not responsible for any errors, damages'; 'or losses that occur as a result of the use of'; 'this forecasting application.'; ''; 'For any enquiries, please email to:'; 'mohdfazuwan@gmail.com'; 'adee@ukm.edu.my'; 'fadzilah.abdullah@ukm.edu.my'};
+
+            % Create DisclaimerLabel
+            app.DisclaimerLabel = uilabel(app.AboutUsTab);
+            app.DisclaimerLabel.HorizontalAlignment = 'center';
+            app.DisclaimerLabel.FontSize = 14;
+            app.DisclaimerLabel.FontWeight = 'bold';
+            app.DisclaimerLabel.Position = [176 166 81 22];
+            app.DisclaimerLabel.Text = 'Disclaimer:';
+
+            % Create ClickHereForTutorialVideoButton
+            app.ClickHereForTutorialVideoButton = uibutton(app.AboutUsTab, 'push');
+            app.ClickHereForTutorialVideoButton.ButtonPushedFcn = createCallbackFcn(app, @ClickHereForTutorialVideoButtonPushed, true);
+            app.ClickHereForTutorialVideoButton.BackgroundColor = [0.302 0.7451 0.9333];
+            app.ClickHereForTutorialVideoButton.FontWeight = 'bold';
+            app.ClickHereForTutorialVideoButton.Position = [128 13 179 22];
+            app.ClickHereForTutorialVideoButton.Text = 'Click Here For Tutorial Video';
+
+            % Create GRSRPPredictionModelLabel
+            app.GRSRPPredictionModelLabel = uilabel(app.UIFigure);
+            app.GRSRPPredictionModelLabel.HorizontalAlignment = 'center';
+            app.GRSRPPredictionModelLabel.FontSize = 40;
+            app.GRSRPPredictionModelLabel.FontWeight = 'bold';
+            app.GRSRPPredictionModelLabel.FontColor = [1 0.902 0.6588];
+            app.GRSRPPredictionModelLabel.Position = [1 506 880 49];
+            app.GRSRPPredictionModelLabel.Text = '  4G RSRP Prediction Model';
+
+            % Create AMachineLearningBasedModelLabel
+            app.AMachineLearningBasedModelLabel = uilabel(app.UIFigure);
+            app.AMachineLearningBasedModelLabel.HorizontalAlignment = 'center';
+            app.AMachineLearningBasedModelLabel.FontSize = 18;
+            app.AMachineLearningBasedModelLabel.FontColor = [1 0.902 0.6588];
+            app.AMachineLearningBasedModelLabel.Position = [1 490 880 22];
+            app.AMachineLearningBasedModelLabel.Text = 'A Machine Learning Based Model';
+
+            % Create Copyright2022UniversitiKebangsaanMalaysiaAllRightsReservedLabel
+            app.Copyright2022UniversitiKebangsaanMalaysiaAllRightsReservedLabel = uilabel(app.UIFigure);
+            app.Copyright2022UniversitiKebangsaanMalaysiaAllRightsReservedLabel.BackgroundColor = [0.9412 0.9412 0.9412];
+            app.Copyright2022UniversitiKebangsaanMalaysiaAllRightsReservedLabel.HorizontalAlignment = 'center';
+            app.Copyright2022UniversitiKebangsaanMalaysiaAllRightsReservedLabel.FontSize = 11;
+            app.Copyright2022UniversitiKebangsaanMalaysiaAllRightsReservedLabel.FontWeight = 'bold';
+            app.Copyright2022UniversitiKebangsaanMalaysiaAllRightsReservedLabel.Position = [1 1 880 22];
+            app.Copyright2022UniversitiKebangsaanMalaysiaAllRightsReservedLabel.Text = 'Copyright © 2022 Universiti Kebangsaan Malaysia. All Rights Reserved.';
+
+            % Show the figure after all components are created
+            app.UIFigure.Visible = 'on';
+        end
+    end
+
+    % App creation and deletion
+    methods (Access = public)
+
+        % Construct app
+        function app = app1
+
+            % Create UIFigure and components
+            createComponents(app)
+
+            % Register the app with App Designer
+            registerApp(app, app.UIFigure)
+
+            if nargout == 0
+                clear app
+            end
+        end
+
+        % Code that executes before app deletion
+        function delete(app)
+
+            % Delete UIFigure when app is deleted
+            delete(app.UIFigure)
+        end
+    end
+end
