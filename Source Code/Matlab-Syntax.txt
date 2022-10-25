@@ -1,7 +1,0 @@
-%To Test Trained Model
-T=readtable('Input.csv');
-yfit=trainedModel.predictFcn(T);
-csvwrite ('Input_out.csv', yfit);
-
-%To Run PDP
-plotPartialDependence(trainedModel.RegressionEnsemble,'D2')
