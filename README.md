@@ -1,1 +1,1 @@
-# Machine Learning Based Online Coverage Estimator (MLOE)
+# Machine Learning based Online coverage Estimator (MLOE)
